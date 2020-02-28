@@ -2,6 +2,7 @@ import pygame
 from pygame.sprite import Group
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 import game_functions as gf
@@ -21,8 +22,9 @@ def run_game():
     # Make the Play button
     play_button = Button(ai_settings, screen, "Play")
 
-    # Create an instance to store game statisctics.
+    # Create an instance to store game statisctics and create a scoreboard
     stats = GameStats(ai_settings)
+    sb = Scoreboard(ai_settings, screen, stats)
 
     # Make a ship
     ship = Ship(ai_settings=ai_settings, screen=screen)
@@ -40,17 +42,17 @@ def run_game():
     # Start the main loop for the game.
     while True:
         # Call check_events method to watch for keyboard and mouse events.
-        gf.check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets)
+        gf.check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets)
         if stats.game_active:
             ship.update()
             bullets.update()
-            gf.update_bullets(ai_settings, screen, ship, aliens, bullets)
-            gf.update_aliens(ai_settings, stats, screen, ship, aliens, bullets)
+            gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets)
+            gf.update_aliens(ai_settings, stats, screen, sb, ship, aliens, bullets)
 
             #print(f"SHIP: {ai_settings.ship_speed_factor}")
             #print(f"BULLET: {ai_settings.bullet_speed_factor}")
             #print(f"ALIEN: {ai_settings.alien_speed_factor}")
 
-        gf.update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button)
+        gf.update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_button)
 
 run_game()
